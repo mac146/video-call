@@ -56,11 +56,13 @@
 </head>
 <body>
 
-  <div id="videosContainer">
-    <video id="localVideo" autoplay playsinline muted></video>
-    <!-- Remote videos will be appended here -->
-    <div id="remoteVideos"></div>
-  </div>
+  <div id="localVideoContainer">
+  <video id="localVideo" autoplay playsinline muted></video>
+</div>
+
+<!-- Add this container for remote peers -->
+<div id="remoteVideos"></div>
+
 
   <div id="controls">
     <button id="toggleMic">
