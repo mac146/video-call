@@ -139,8 +139,9 @@ function setupControls() {
     camEnabled = !camEnabled;
     localStream.getVideoTracks().forEach(track => track.enabled = camEnabled);
     toggleCamBtn.innerHTML = camEnabled
-      ? '<i class="fa-solid fa-camera"></i>'
-      : '<i class="fa-solid fa-camera-slash"></i>';
+  ? '<i class="fa-solid fa-video fa-lg text-green-500"></i>'
+  : '<i class="fa-solid fa-video-slash fa-lg text-red-500"></i>';
+
   };
 
   leaveBtn.onclick = () => {
