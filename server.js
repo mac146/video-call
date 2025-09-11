@@ -19,11 +19,22 @@ app.get("/:room", (req, res) => {
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  socket.on("join-room", (roomId) => {
-    socket.join(roomId);             // join the Socket.IO room
-    socket.currentRoom = roomId;     // save the room for later use
-    console.log(`${socket.id} joined room ${roomId}`);
-  });
+ socket.on("join-room", (roomId) => {
+  socket.join(roomId);
+  socket.currentRoom = roomId;
+
+  // find other users in the room
+  const otherUsers = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
+  const existingUsers = otherUsers.filter((id) => id !== socket.id);
+
+  // tell the new user who’s already there
+  socket.emit("existing-users", existingUsers);
+
+  // tell existing users that a new user joined
+  socket.to(roomId).emit("user-joined", socket.id);
+
+  console.log(`${socket.id} joined room ${roomId}`);
+});
 
   socket.on("offer", (data) => {
     io.to(data.target).emit("offer", { sdp: data.sdp, from: socket.id });
@@ -45,10 +56,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnecting", () => {
-    if (socket.currentRoom) {
-      socket.to(socket.currentRoom).emit("user-left", socket.id);
-    }
-  });
+  if (socket.currentRoom) {
+    socket.to(socket.currentRoom).emit("user-left", socket.id);
+  }
+});
 
 });
 

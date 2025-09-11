@@ -98,6 +98,15 @@ socket.on("user-joined", (socketId) => {
   }, 100);
 });
 
+socket.on("user-left", (id) => {
+  if (peers[id]) {
+    peers[id].close();
+    delete peers[id];
+  }
+  const video = document.getElementById(id);
+  if (video) video.remove();
+});
+
 socket.on("offer", async ({ sdp, from }) => {
   const peer = peers[from];
   if (peer) {
